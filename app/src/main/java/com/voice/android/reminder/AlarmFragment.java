@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by lebron on 17-4-27.
@@ -38,8 +39,8 @@ public class AlarmFragment extends BaseFragment {
         BaseQuickAdapter<AlarmModel> adapter = new BaseQuickAdapter<AlarmModel>(R.layout.alarm_new_item, mDatas) {
             @Override
             protected void convert(BaseViewHolder baseViewHolder, final AlarmModel alarmModel) {
-                baseViewHolder.setText(R.id.alarm_item_time_txv, alarmModel.getTime() + "");
-                baseViewHolder.setText(R.id.alarm_item_date_txv, alarmModel.getDate() + "");
+                baseViewHolder.setText(R.id.alarm_item_time_txv, "12:01");
+                baseViewHolder.setText(R.id.alarm_item_date_txv, "2017-05-01");
                 SwitchCompat switchCompat = baseViewHolder.getView(R.id.alarm_item_switchcompat);
                 switchCompat.setChecked(alarmModel.isOpen());
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -54,13 +55,18 @@ public class AlarmFragment extends BaseFragment {
         mRecyclerView.setAdapter(adapter);
     }
 
+    @OnClick(R.id.alarm_floating_btn)
+    public void addAlarm() {
+        AddAlarmActivity.start(getActivity());
+    }
+
     private void initData() {
         mDatas = new ArrayList<>();
         AlarmModel alarmModel = new AlarmModel();
         alarmModel.setTime(123456);
         alarmModel.setDate(123456);
         alarmModel.setOpen(true);
-        for(int i=0;i<15;i++){
+        for (int i = 0; i < 15; i++) {
             mDatas.add(alarmModel);
         }
     }

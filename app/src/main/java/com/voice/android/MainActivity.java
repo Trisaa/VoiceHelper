@@ -15,7 +15,9 @@ import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.voice.android.common.base.BaseActivity;
+import com.voice.android.quicknote.NoteFragment;
 import com.voice.android.reminder.ReminderFragment;
+import com.voice.android.translate.TranslateFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,25 +32,40 @@ public class MainActivity extends BaseActivity {
     ViewPager mViewPager;
 
     private MainPagerAdapter mMainPagerAdapter;
+    private Menu mMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+        mToolbar.setTitle("提醒");
         mMainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
         mBottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.main_bottom_nav_home:
-
+                        mViewPager.setCurrentItem(0);
+                        mMenu.getItem(0).setVisible(true);
+                        mMenu.getItem(1).setVisible(false);
+                        mMenu.getItem(2).setVisible(false);
+                        mToolbar.setTitle("提醒");
                         break;
                     case R.id.main_bottom_nav_subscribe:
-
+                        mViewPager.setCurrentItem(1);
+                        mMenu.getItem(1).setVisible(true);
+                        mMenu.getItem(0).setVisible(false);
+                        mMenu.getItem(2).setVisible(false);
+                        mToolbar.setTitle("速记");
                         break;
                     case R.id.main_bottom_nav_account:
-
+                        mViewPager.setCurrentItem(2);
+                        mMenu.getItem(2).setVisible(true);
+                        mMenu.getItem(0).setVisible(false);
+                        mMenu.getItem(1).setVisible(false);
+                        mToolbar.setTitle("翻译");
                         break;
                 }
                 return true;
@@ -63,8 +80,14 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mMenu = menu;
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
+        if (item.getItemId() == R.id.action_history) {
 
         }
         return super.onOptionsItemSelected(item);
@@ -90,10 +113,10 @@ public class MainActivity extends BaseActivity {
                     fragment = new ReminderFragment();
                     break;
                 case 1:
-                    fragment = new ReminderFragment();
+                    fragment = new NoteFragment();
                     break;
                 case 2:
-                    fragment = new ReminderFragment();
+                    fragment = new TranslateFragment();
                     break;
                 default:
                     break;

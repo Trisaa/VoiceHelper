@@ -5,8 +5,8 @@
 
     <ImageView
         android:id="@+id/alarm_item_icon"
-        android:layout_width="36dp"
-        android:layout_height="36dp"
+        android:layout_width="33dp"
+        android:layout_height="33dp"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"

@@ -17,7 +17,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@mipmap/ic_launcher"
+                android:background="@mipmap/shidigongyuan"
                 app:layout_aspectRatio="200%"
                 app:layout_widthPercent="100%" />
 
@@ -64,7 +64,8 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:background="@mipmap/ic_launcher"
+                android:layout_marginTop="16dp"
+                android:background="@mipmap/shidigongyuan"
                 app:layout_aspectRatio="200%"
                 app:layout_widthPercent="100%" />
 
@@ -88,7 +89,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="16dp"
                     android:layout_toRightOf="@id/warm_colder_reminder_img"
-                    android:text="下雨提醒我带伞"
+                    android:text="靠近常用wifi时提醒我"
                     android:textColor="#ffffff" />
 
                 <Button
