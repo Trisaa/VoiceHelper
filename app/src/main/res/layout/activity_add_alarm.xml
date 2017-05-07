@@ -6,19 +6,17 @@
 
     <include layout="@layout/toolbar" />
 
-    <TimePicker
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <RelativeLayout
+        android:id="@+id/add_alarm_time_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:text="日期" />
+            android:text="时间" />
 
         <TextView
             android:id="@+id/add_alarm_time_txv"
@@ -28,14 +26,148 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="16dp"
             android:drawableRight="@mipmap/go_ic"
-            android:text="今天" />
+            android:text="20:00" />
     </RelativeLayout>
 
     <include layout="@layout/common_divider" />
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/add_alarm_repeat_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="重复" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_txv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="16dp"
+                android:drawableRight="@mipmap/go_ic"
+                android:text="只响一次" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/add_alarm_repeat_once"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="只响一次" />
+
+            <Button
+                android:id="@+id/add_alarm_repeat_everyday"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="每天" />
+
+            <Button
+                android:id="@+id/add_alarm_repeat_week"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="按周" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/add_alarm_choose_week_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_monday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周一" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_tuesday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周二" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_wednesday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周三" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_thursday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周四" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_friday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周五" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_saturday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周六" />
+
+            <TextView
+                android:id="@+id/add_alarm_repeat_sunday"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/common_circle_normal"
+                android:gravity="center"
+                android:text="周日" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <include layout="@layout/common_divider" />
+
+    <RelativeLayout
+        android:id="@+id/add_alarm_label_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
             android:layout_width="wrap_content"
@@ -57,8 +189,32 @@
     <include layout="@layout/common_divider" />
 
     <RelativeLayout
+        android:id="@+id/add_alarm_vibrate_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="震动" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/add_alarm_vibrate_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp" />
+    </RelativeLayout>
+
+    <include layout="@layout/common_divider" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
             android:layout_width="wrap_content"
@@ -76,5 +232,13 @@
             android:drawableRight="@mipmap/go_ic"
             android:text="布谷鸟" />
     </RelativeLayout>
+
+    <Button
+        android:id="@+id/add_alarm_delete_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="删除闹钟"
+        android:visibility="gone" />
 
 </LinearLayout>

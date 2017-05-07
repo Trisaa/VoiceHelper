@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 public class SharedPreferencesUtils {
+    public static final String KEY_SETTED_ALARM_ID = "KEY_SETTED_ALARM_ID";
+    public static final String KEY_SETTED_ALARM_LIST = "KEY_SETTED_ALARM_LIST";
 
     public static SharedPreferences getSharedPreferenced(Context context) {
         return context.getSharedPreferences("settings", Context.MODE_PRIVATE);

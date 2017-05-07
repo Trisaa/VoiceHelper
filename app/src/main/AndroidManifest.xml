@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
+    <uses-permission android:name="android.permission.VIBRATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -26,6 +28,13 @@
         <activity
             android:name=".reminder.AddAlarmActivity"
             android:label="新建闹钟" />
+
+        <receiver android:name=".common.utils.LoongggAlarmReceiver">
+            <intent-filter>
+                <action android:name="com.loonggg.alarm.clock" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

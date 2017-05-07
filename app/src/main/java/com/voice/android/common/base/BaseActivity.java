@@ -9,6 +9,7 @@ import android.view.MenuItem;
 
 import com.voice.android.R;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
@@ -29,7 +30,14 @@ public abstract class BaseActivity extends AppCompatActivity {
             setContentView(getContentViewResId());
         }
         ButterKnife.bind(this);
+        EventBus.getDefault().register(this);
         initToobar();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Subscribe

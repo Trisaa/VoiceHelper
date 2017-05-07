@@ -39,5 +39,8 @@ dependencies {
     //RxAndroid
     compile 'io.reactivex:rxandroid:1.2.0'
     compile 'com.tbruyelle.rxpermissions:rxpermissions:0.9.2@aar'
+    //Json解析
+    compile 'com.google.code.gson:gson:2.4'
+
     testCompile 'junit:junit:4.12'
 }

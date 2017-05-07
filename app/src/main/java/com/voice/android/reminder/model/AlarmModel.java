@@ -1,30 +1,50 @@
 package com.voice.android.reminder.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by lebron on 17-4-28.
  */
 
-public class AlarmModel {
-    private long time;
-    private long date;
+public class AlarmModel implements Parcelable {
+    public static final int ALARM_ONCE = 0;
+    public static final int ALARM_EVERYDAY = 1;
+    public static final int ALARM_BYWEEK = 2;
+    public static final int ALARM_RING_AND_VIBRATE = 2;
+    public static final int ALARM_RING = 1;
+    public static final int ALARM_VIBRATE = 0;
+    private int id;
+    private int hour;
+    private int minute;
     private boolean isOpen;
-    private int ringtone;
+    private int vibrate;
     private String describe;
+    private int flag;
+    private int week;
 
-    public long getTime() {
-        return time;
+    public int getId() {
+        return id;
     }
 
-    public void setTime(long time) {
-        this.time = time;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public long getDate() {
-        return date;
+    public int getHour() {
+        return hour;
     }
 
-    public void setDate(long date) {
-        this.date = date;
+    public void setHour(int hour) {
+        this.hour = hour;
+    }
+
+    public int getMinute() {
+        return minute;
+    }
+
+    public void setMinute(int minute) {
+        this.minute = minute;
     }
 
     public boolean isOpen() {
@@ -35,12 +55,12 @@ public class AlarmModel {
         isOpen = open;
     }
 
-    public int getRingtone() {
-        return ringtone;
+    public int getVibrate() {
+        return vibrate;
     }
 
-    public void setRingtone(int ringtone) {
-        this.ringtone = ringtone;
+    public void setVibrate(int vibrate) {
+        this.vibrate = vibrate;
     }
 
     public String getDescribe() {
@@ -50,4 +70,69 @@ public class AlarmModel {
     public void setDescribe(String describe) {
         this.describe = describe;
     }
+
+    public int getFlag() {
+        return flag;
+    }
+
+    public void setFlag(int flag) {
+        this.flag = flag;
+    }
+
+    public int getWeek() {
+        return week;
+    }
+
+    public void setWeek(int week) {
+        this.week = week;
+    }
+
+    @Override
+    public String toString() {
+        return " id = " + id + " hour " + hour + " minute " + minute + " vibrate " + vibrate + " describe " + describe + " isopen " + isOpen;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.id);
+        dest.writeInt(this.hour);
+        dest.writeInt(this.minute);
+        dest.writeByte(this.isOpen ? (byte) 1 : (byte) 0);
+        dest.writeInt(this.vibrate);
+        dest.writeString(this.describe);
+        dest.writeInt(this.flag);
+        dest.writeInt(this.week);
+    }
+
+    public AlarmModel() {
+    }
+
+    protected AlarmModel(Parcel in) {
+        this.id = in.readInt();
+        this.hour = in.readInt();
+        this.minute = in.readInt();
+        this.isOpen = in.readByte() != 0;
+        this.vibrate = in.readInt();
+        this.describe = in.readString();
+        this.flag = in.readInt();
+        this.week = in.readInt();
+    }
+
+    public static final Creator<AlarmModel> CREATOR = new Creator<AlarmModel>() {
+        @Override
+        public AlarmModel createFromParcel(Parcel source) {
+            return new AlarmModel(source);
+        }
+
+        @Override
+        public AlarmModel[] newArray(int size) {
+            return new AlarmModel[size];
+        }
+    };
 }
