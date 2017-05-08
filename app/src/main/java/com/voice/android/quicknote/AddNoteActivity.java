@@ -4,10 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.iflytek.cloud.RecognizerResult;
@@ -20,6 +27,7 @@ import com.voice.android.R;
 import com.voice.android.common.base.BaseActivity;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -32,6 +40,18 @@ import butterknife.OnClick;
 public class AddNoteActivity extends BaseActivity {
     @BindView(R.id.add_note_edittext)
     EditText mEditText;
+    @BindView(R.id.add_note_current_time_txv)
+    TextView mTimeView;
+    @BindView(R.id.add_note_current_length_txv)
+    TextView mLengthView;
+    @BindView(R.id.add_note_voice_img)
+    ImageView mVoiceImageView;
+    @BindView(R.id.add_note_keyboard_img)
+    ImageView mKeyboardImageView;
+    @BindView(R.id.add_note_voice_btn)
+    FloatingActionButton mRecordingBtn;
+
+    private StringBuffer mStringBuffer = new StringBuffer();
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AddNoteActivity.class);
@@ -43,8 +63,23 @@ public class AddNoteActivity extends BaseActivity {
         return R.layout.activity_add_note;
     }
 
-    @OnClick(R.id.add_note_voice_btn)
+    @OnClick(R.id.add_note_voice_layout)
     public void startVoice() {
+        mVoiceImageView.setBackgroundResource(R.mipmap.voice_blue_ic);
+        mKeyboardImageView.setBackgroundResource(R.mipmap.keyboard_gray_ic);
+        mRecordingBtn.setVisibility(View.VISIBLE);
+    }
+
+    @OnClick(R.id.add_note_keyboard_layout)
+    public void startKeyboard() {
+        mVoiceImageView.setBackgroundResource(R.mipmap.voice_gray_ic);
+        mKeyboardImageView.setBackgroundResource(R.mipmap.keyboard_blue_ic);
+        mRecordingBtn.setVisibility(View.GONE);
+        showSoftInputFromWindow(mEditText);
+    }
+
+    @OnClick(R.id.add_note_voice_btn)
+    public void startRecording() {
         initSpeech(this);
     }
 
@@ -52,6 +87,37 @@ public class AddNoteActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=591051a2");
+        getCurrentTime();
+        showSoftInputFromWindow(mEditText);
+        mEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //mLengthView.setText(s.length());
+            }
+        });
+    }
+
+    private void showSoftInputFromWindow(EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        AddNoteActivity.this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
+
+    private void getCurrentTime() {
+        SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyy-MM-dd    hh:mm:ss");
+        String date = sDateFormat.format(new java.util.Date());
+        mTimeView.setText(date);
     }
 
     @Override
@@ -85,6 +151,9 @@ public class AddNoteActivity extends BaseActivity {
                     //解析语音
                     String result = parseVoice(recognizerResult.getResultString());
                     Log.i("Lebron", result);
+                    mStringBuffer.append(result);
+                    mEditText.setText(mStringBuffer);
+                    mEditText.setSelection(mStringBuffer.length());
                 }
             }
 

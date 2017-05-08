@@ -26,48 +26,88 @@
             android:text="0字" />
     </LinearLayout>
 
-    <ScrollView
+    <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/toolbar">
 
-        <android.support.percent.PercentRelativeLayout
+        <EditText
+            android:id="@+id/add_note_edittext"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar"
+            android:background="@null"
+            android:gravity="top"
+            app:layout_heightPercent="50%" />
 
-            <EditText
-                android:id="@+id/add_note_edittext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/toolbar"
-                android:gravity="top"
-                app:layout_heightPercent="80%" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/add_note_input_type_layout"
+            android:background="#e8e8e8" />
 
-            <LinearLayout
-                android:id="@+id/add_note_input_type_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/add_note_edittext"
-                android:orientation="horizontal">
+        <LinearLayout
+            android:id="@id/add_note_input_type_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_note_edittext"
+            android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/add_note_keyboard_btn"
-                    android:layout_width="0dp"
+            <RelativeLayout
+                android:id="@+id/add_note_keyboard_layout"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="键盘">
+
+                <ImageView
+                    android:id="@+id/add_note_keyboard_img"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="键盘" />
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/keyboard_blue_ic" />
+            </RelativeLayout>
 
-                <Button
-                    android:id="@+id/add_note_voice_btn"
-                    android:layout_width="0dp"
+            <RelativeLayout
+                android:id="@+id/add_note_voice_layout"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="语音">
+
+                <ImageView
+                    android:id="@+id/add_note_voice_img"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="语音" />
-            </LinearLayout>
+                    android:layout_centerInParent="true"
+                    android:background="@mipmap/voice_gray_ic" />
+            </RelativeLayout>
+        </LinearLayout>
 
+        <View
+            android:id="@+id/add_note_bottom_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/add_note_input_type_layout"
+            android:background="#e8e8e8" />
 
-        </android.support.percent.PercentRelativeLayout>
-    </ScrollView>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_below="@id/add_note_bottom_divider">
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/add_note_voice_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@mipmap/ic_voice"
+                android:visibility="gone"
+                app:fabSize="normal" />
+        </RelativeLayout>
+
+    </android.support.percent.PercentRelativeLayout>
 
 
 </LinearLayout>
