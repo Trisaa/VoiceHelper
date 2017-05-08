@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by LeBron on 2017/5/2.
@@ -44,5 +45,10 @@ public class NoteFragment extends BaseFragment {
         };
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(adapter);
+    }
+
+    @OnClick(R.id.note_floating_btn)
+    public void addNote() {
+        AddNoteActivity.start(getActivity());
     }
 }

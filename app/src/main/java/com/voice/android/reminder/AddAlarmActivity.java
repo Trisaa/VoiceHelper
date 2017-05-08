@@ -1,6 +1,7 @@
 package com.voice.android.reminder;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -344,23 +345,35 @@ public class AddAlarmActivity extends BaseActivity {
 
     @OnClick(R.id.add_alarm_delete_btn)
     public void delete() {
-        String alarmStr = SharedPreferencesUtils.getString(this, SharedPreferencesUtils.KEY_SETTED_ALARM_LIST, "");
-        List<AlarmModel> list = new Gson().fromJson(alarmStr, new TypeToken<List<AlarmModel>>() {
-        }.getType());
-        if (mAlarmModel != null && list != null) {
-            for (int i = 0; i < list.size(); i++) {
-                if (mAlarmModel.getId() == list.get(i).getId()) {
-                    Log.i("Lebron", " remove pos " + i);
-                    list.remove(i);
-                    AlarmManagerUtil.cancelAlarm(AddAlarmActivity.this, ALARM_ACTION, mAlarmModel.getId());
-                    break;
-                }
-            }
-            SharedPreferencesUtils.saveString(this, SharedPreferencesUtils.KEY_SETTED_ALARM_LIST, new Gson().toJson(list));
-            Log.i("Lebron", mAlarmModel.toString());
-            EventBus.getDefault().post(KEY_ADD_ALARM);
-            finish();
-        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog dialog = builder.setMessage("确定要删除当前闹钟?")
+                .setCancelable(false)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String alarmStr = SharedPreferencesUtils.getString(AddAlarmActivity.this, SharedPreferencesUtils.KEY_SETTED_ALARM_LIST, "");
+                        List<AlarmModel> list = new Gson().fromJson(alarmStr, new TypeToken<List<AlarmModel>>() {
+                        }.getType());
+                        if (mAlarmModel != null && list != null) {
+                            for (int i = 0; i < list.size(); i++) {
+                                if (mAlarmModel.getId() == list.get(i).getId()) {
+                                    Log.i("Lebron", " remove pos " + i);
+                                    list.remove(i);
+                                    AlarmManagerUtil.cancelAlarm(AddAlarmActivity.this, ALARM_ACTION, mAlarmModel.getId());
+                                    break;
+                                }
+                            }
+                            SharedPreferencesUtils.saveString(AddAlarmActivity.this, SharedPreferencesUtils.KEY_SETTED_ALARM_LIST, new Gson().toJson(list));
+                            Log.i("Lebron", mAlarmModel.toString());
+                            EventBus.getDefault().post(KEY_ADD_ALARM);
+                            dialog.dismiss();
+                            finish();
+                        }
+                    }
+                })
+                .setNegativeButton("取消", null)
+                .create();
+        dialog.show();
     }
 
     private void updateAlarmByWeek(String weekStr, int week) {

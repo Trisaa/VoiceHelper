@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.tbruyelle.rxpermissions.RxPermissions;
 import com.voice.android.common.base.BaseActivity;
+import com.voice.android.quicknote.AddNoteActivity;
 import com.voice.android.quicknote.NoteFragment;
 import com.voice.android.reminder.ReminderFragment;
 import com.voice.android.translate.TranslateFragment;
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.main_bottom_nav_home:
                         mViewPager.setCurrentItem(0);
-                        mMenu.getItem(0).setVisible(true);
+                        mMenu.getItem(0).setVisible(false);
                         mMenu.getItem(1).setVisible(false);
                         mMenu.getItem(2).setVisible(false);
                         mToolbar.setTitle("提醒");
@@ -89,6 +90,8 @@ public class MainActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_history) {
 
+        } else if (item.getItemId() == R.id.action_add) {
+            AddNoteActivity.start(this);
         }
         return super.onOptionsItemSelected(item);
     }

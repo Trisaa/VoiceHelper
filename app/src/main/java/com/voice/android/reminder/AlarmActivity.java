@@ -28,7 +28,7 @@ public class AlarmActivity extends Activity {
         setContentView(R.layout.activity_alarm);
         alarmModel = (AlarmModel) getIntent().getExtras().getParcelable("alarmModel");
         if (alarmModel != null && alarmModel.isOpen()) {
-            Log.i("Lebron"," AlarmActivity onCreate");
+            Log.i("Lebron", " AlarmActivity onCreate");
             showDialog();
         } else {
             finish();
@@ -47,9 +47,9 @@ public class AlarmActivity extends Activity {
         labelTextView.setText(alarmModel.getDescribe());
 
         if (alarmModel.getVibrate() == 2) {
-            AudioPlayer.getInstance(this).play(alarmModel.getRingtoneUrl()==null?"":alarmModel.getRingtoneUrl(), true, true);
+            AudioPlayer.getInstance(this).play(alarmModel.getRingtoneUrl() == null ? "" : alarmModel.getRingtoneUrl(), true, true);
         } else if (alarmModel.getVibrate() == 1) {
-            AudioPlayer.getInstance(this).play(alarmModel.getRingtoneUrl()==null?"":alarmModel.getRingtoneUrl(), true, false);
+            AudioPlayer.getInstance(this).play(alarmModel.getRingtoneUrl() == null ? "" : alarmModel.getRingtoneUrl(), true, false);
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
