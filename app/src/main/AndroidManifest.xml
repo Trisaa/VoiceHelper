@@ -29,7 +29,13 @@
             android:name=".reminder.AddAlarmActivity"
             android:label="新建闹钟" />
 
-        <receiver android:name=".common.utils.LoongggAlarmReceiver">
+        <activity
+            android:name=".reminder.RingtoneChooseActivity"
+            android:label="选择铃声" />
+
+        <activity android:name=".reminder.AlarmActivity" />
+
+        <receiver android:name=".common.utils.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.loonggg.alarm.clock" />
             </intent-filter>

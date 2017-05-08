@@ -3,6 +3,7 @@ package com.voice.android.reminder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
@@ -17,7 +18,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -29,10 +31,11 @@ import com.voice.android.common.utils.AlarmManagerUtil;
 import com.voice.android.common.utils.SharedPreferencesUtils;
 import com.voice.android.common.utils.TimeUtils;
 import com.voice.android.reminder.model.AlarmModel;
+import com.voice.android.reminder.model.RingtoneModel;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,36 +55,21 @@ public class AddAlarmActivity extends BaseActivity {
     TextView mTimeView;
     @BindView(R.id.add_alarm_label_txv)
     TextView mLabelView;
-    @BindView(R.id.add_alarm_repeat_monday)
-    TextView mMondayView;
-    @BindView(R.id.add_alarm_repeat_tuesday)
-    TextView mTuesdayView;
-    @BindView(R.id.add_alarm_repeat_wednesday)
-    TextView mWednesdayView;
-    @BindView(R.id.add_alarm_repeat_thursday)
-    TextView mThursdayView;
-    @BindView(R.id.add_alarm_repeat_friday)
-    TextView mFridayView;
-    @BindView(R.id.add_alarm_repeat_saturday)
-    TextView mSaturdayView;
-    @BindView(R.id.add_alarm_repeat_sunday)
-    TextView mSundayView;
     @BindView(R.id.add_alarm_vibrate_switch)
     SwitchCompat mVibrateSwitch;
-    @BindView(R.id.add_alarm_choose_week_layout)
-    LinearLayout mWeekLayout;
     @BindView(R.id.add_alarm_repeat_txv)
     TextView mRepeatView;
     @BindView(R.id.add_alarm_delete_btn)
     Button mDeleteBtn;
+    @BindView(R.id.add_alarm_ringtone_txv)
+    TextView mRingtoneView;
 
     private int hour, minute, tempHour, tempMinute;
     private boolean vibrate;
-    private String label;
+    private String label, ringtoneName, ringtoneUrl;
     private int week, flag;
     private AlarmModel mAlarmModel;
     private boolean isAddedAlarm;
-    private TextView mLastSelectedView;
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AddAlarmActivity.class);
@@ -117,8 +105,11 @@ public class AddAlarmActivity extends BaseActivity {
             vibrate = mAlarmModel.getVibrate() != AlarmModel.ALARM_RING;
             flag = mAlarmModel.getFlag();
             week = mAlarmModel.getWeek();
+            ringtoneName = mAlarmModel.getRingtoneName();
+            ringtoneUrl = mAlarmModel.getRingtoneUrl();
             mTimeView.setText(TimeUtils.formatTime(hour, minute));
             mLabelView.setText(label);
+            mRingtoneView.setText(TextUtils.isEmpty(ringtoneName) ? "无" : ringtoneName);
             mVibrateSwitch.setChecked(vibrate);
             switch (flag) {
                 case AlarmModel.ALARM_ONCE:
@@ -173,6 +164,8 @@ public class AddAlarmActivity extends BaseActivity {
             mAlarmModel.setOpen(true);
             mAlarmModel.setFlag(flag);
             mAlarmModel.setWeek(week);
+            mAlarmModel.setRingtoneName(ringtoneName);
+            mAlarmModel.setRingtoneUrl(ringtoneUrl);
 
             if (isAddedAlarm) {
                 for (int i = 0; i < list.size(); i++) {
@@ -185,13 +178,22 @@ public class AddAlarmActivity extends BaseActivity {
                 list.add(mAlarmModel);
             }
 
-            AlarmManagerUtil.setAlarm(this, flag, hour, minute, mAlarmModel.getId(), week, label, vibrate ? 2 : 1);
+            AlarmManagerUtil.setAlarm(this, mAlarmModel);
             SharedPreferencesUtils.saveString(this, SharedPreferencesUtils.KEY_SETTED_ALARM_LIST, new Gson().toJson(list));
             Log.i("Lebron", mAlarmModel.toString());
             EventBus.getDefault().post(KEY_ADD_ALARM);
             finish();
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Subscribe
+    public void getRingtone(RingtoneModel model) {
+        if (model != null) {
+            ringtoneName = model.getName();
+            ringtoneUrl = model.getUrl();
+            mRingtoneView.setText(model.getName());
+        }
     }
 
     @OnClick(R.id.add_alarm_time_layout)
@@ -225,9 +227,9 @@ public class AddAlarmActivity extends BaseActivity {
 
     @OnClick(R.id.add_alarm_label_layout)
     public void chooseLabel() {
-        final View view = LayoutInflater.from(this).inflate(R.layout.common_input_dialog, null);
+        View view = LayoutInflater.from(this).inflate(R.layout.common_input_dialog, null);
         final EditText editText = (EditText) view.findViewById(R.id.account_update_edt);
-        final TextView accountSubmitOk = (TextView) view.findViewById(R.id.account_update_submit_txt);
+        TextView accountSubmitOk = (TextView) view.findViewById(R.id.account_update_submit_txt);
         if (editText.getText() != null) {
             accountSubmitOk.setTextColor(ContextCompat.getColor(this, R.color.account_update_submit));
         }
@@ -251,62 +253,93 @@ public class AddAlarmActivity extends BaseActivity {
         alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-    @OnClick(R.id.add_alarm_repeat_monday)
-    public void chooseMonday() {
-        updateAlarmByWeek("每周一", mMondayView, 1);
+    @OnClick(R.id.add_alarm_repeat_layout)
+    public void chooseRepeat() {
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_choose_repeat, null);
+        RadioGroup radioGroup = (RadioGroup) view.findViewById(R.id.dialog_repeat_radiogroup);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(view);
+        final AlertDialog alertDialog = builder.create();
+
+        if (mAlarmModel != null) {
+            if (mAlarmModel.getFlag() == AlarmModel.ALARM_ONCE) {
+                ((RadioButton) view.findViewById(R.id.dialog_repeat_once_radiobtn)).setChecked(true);
+            } else if (mAlarmModel.getFlag() == AlarmModel.ALARM_EVERYDAY) {
+                ((RadioButton) view.findViewById(R.id.dialog_repeat_everyday_radiobtn)).setChecked(true);
+            } else {
+                switch (mAlarmModel.getWeek()) {
+                    case 1:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_monday_radiobtn)).setChecked(true);
+                        break;
+                    case 2:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_tuesday_radiobtn)).setChecked(true);
+                        break;
+                    case 3:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_wednesday_radiobtn)).setChecked(true);
+                        break;
+                    case 4:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_thursday_radiobtn)).setChecked(true);
+                        break;
+                    case 5:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_friday_radiobtn)).setChecked(true);
+                        break;
+                    case 6:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_saturday_radiobtn)).setChecked(true);
+                        break;
+                    case 7:
+                        ((RadioButton) view.findViewById(R.id.dialog_repeat_sunday_radiobtn)).setChecked(true);
+                        break;
+                }
+            }
+        }
+
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, @IdRes int checkedId) {
+                switch (checkedId) {
+                    case R.id.dialog_repeat_once_radiobtn:
+                        mRepeatView.setText("只响一次");
+                        flag = AlarmModel.ALARM_ONCE;
+                        week = 0;
+                        break;
+                    case R.id.dialog_repeat_everyday_radiobtn:
+                        mRepeatView.setText("每天");
+                        flag = AlarmModel.ALARM_EVERYDAY;
+                        week = 0;
+                        break;
+                    case R.id.dialog_repeat_monday_radiobtn:
+                        updateAlarmByWeek("每周一", 1);
+                        break;
+                    case R.id.dialog_repeat_tuesday_radiobtn:
+                        updateAlarmByWeek("每周二", 2);
+                        break;
+                    case R.id.dialog_repeat_wednesday_radiobtn:
+                        updateAlarmByWeek("每周三", 3);
+                        break;
+                    case R.id.dialog_repeat_thursday_radiobtn:
+                        updateAlarmByWeek("每周四", 4);
+                        break;
+                    case R.id.dialog_repeat_friday_radiobtn:
+                        updateAlarmByWeek("每周五", 5);
+                        break;
+                    case R.id.dialog_repeat_saturday_radiobtn:
+                        updateAlarmByWeek("每周六", 6);
+                        break;
+                    case R.id.dialog_repeat_sunday_radiobtn:
+                        updateAlarmByWeek("每周日", 7);
+                        break;
+                }
+                alertDialog.dismiss();
+            }
+        });
+
+        alertDialog.show();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
     }
 
-    @OnClick(R.id.add_alarm_repeat_tuesday)
-    public void chooseTuesday() {
-        updateAlarmByWeek("每周二", mTuesdayView, 2);
-    }
-
-    @OnClick(R.id.add_alarm_repeat_wednesday)
-    public void chooseWednesday() {
-        updateAlarmByWeek("每周三", mWednesdayView, 3);
-    }
-
-    @OnClick(R.id.add_alarm_repeat_thursday)
-    public void chooseThursday() {
-        updateAlarmByWeek("每周四", mThursdayView, 4);
-    }
-
-    @OnClick(R.id.add_alarm_repeat_friday)
-    public void chooseFriday() {
-        updateAlarmByWeek("每周五", mFridayView, 5);
-    }
-
-    @OnClick(R.id.add_alarm_repeat_saturday)
-    public void chooseSaturday() {
-        updateAlarmByWeek("每周六", mSaturdayView, 6);
-    }
-
-    @OnClick(R.id.add_alarm_repeat_sunday)
-    public void chooseSunday() {
-        updateAlarmByWeek("每周日", mSundayView, 7);
-    }
-
-    @OnClick(R.id.add_alarm_repeat_once)
-    public void once() {
-        mWeekLayout.setVisibility(View.GONE);
-        mRepeatView.setText("只响一次");
-        flag = AlarmModel.ALARM_ONCE;
-        week = 0;
-    }
-
-    @OnClick(R.id.add_alarm_repeat_everyday)
-    public void everyday() {
-        mWeekLayout.setVisibility(View.GONE);
-        mRepeatView.setText("每天");
-        flag = AlarmModel.ALARM_EVERYDAY;
-        week = 0;
-    }
-
-    @OnClick(R.id.add_alarm_repeat_week)
-    public void byWeek() {
-        mWeekLayout.setVisibility(View.VISIBLE);
-        flag = AlarmModel.ALARM_BYWEEK;
-        updateAlarmByWeek("每周一", mMondayView, 1);
+    @OnClick(R.id.add_alarm_ringtone_layout)
+    public void chooseRingtone() {
+        RingtoneChooseActivity.start(this, ringtoneName);
     }
 
     @OnClick(R.id.add_alarm_delete_btn)
@@ -319,7 +352,7 @@ public class AddAlarmActivity extends BaseActivity {
                 if (mAlarmModel.getId() == list.get(i).getId()) {
                     Log.i("Lebron", " remove pos " + i);
                     list.remove(i);
-                    AlarmManagerUtil.cancelAlarm(AddAlarmActivity.this,ALARM_ACTION,mAlarmModel.getId());
+                    AlarmManagerUtil.cancelAlarm(AddAlarmActivity.this, ALARM_ACTION, mAlarmModel.getId());
                     break;
                 }
             }
@@ -330,14 +363,10 @@ public class AddAlarmActivity extends BaseActivity {
         }
     }
 
-    private void updateAlarmByWeek(String weekStr, TextView textView, int week) {
-        if (mLastSelectedView != null) {
-            mLastSelectedView.setBackgroundResource(R.drawable.common_circle_normal);
-        }
+    private void updateAlarmByWeek(String weekStr, int week) {
         mRepeatView.setText(weekStr);
-        textView.setBackgroundResource(R.drawable.common_circle_selected);
-        mLastSelectedView = textView;
         this.week = week;
+        flag = AlarmModel.ALARM_BYWEEK;
     }
 
 }

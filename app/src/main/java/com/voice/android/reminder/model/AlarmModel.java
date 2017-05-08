@@ -22,6 +22,8 @@ public class AlarmModel implements Parcelable {
     private String describe;
     private int flag;
     private int week;
+    private String ringtoneName;
+    private String ringtoneUrl;
 
     public int getId() {
         return id;
@@ -87,11 +89,30 @@ public class AlarmModel implements Parcelable {
         this.week = week;
     }
 
+    public String getRingtoneName() {
+        return ringtoneName;
+    }
+
+    public void setRingtoneName(String ringtoneName) {
+        this.ringtoneName = ringtoneName;
+    }
+
+    public String getRingtoneUrl() {
+        return ringtoneUrl;
+    }
+
+    public void setRingtoneUrl(String ringtoneUrl) {
+        this.ringtoneUrl = ringtoneUrl;
+    }
+
     @Override
     public String toString() {
         return " id = " + id + " hour " + hour + " minute " + minute + " vibrate " + vibrate + " describe " + describe + " isopen " + isOpen;
     }
 
+
+    public AlarmModel() {
+    }
 
     @Override
     public int describeContents() {
@@ -108,9 +129,8 @@ public class AlarmModel implements Parcelable {
         dest.writeString(this.describe);
         dest.writeInt(this.flag);
         dest.writeInt(this.week);
-    }
-
-    public AlarmModel() {
+        dest.writeString(this.ringtoneName);
+        dest.writeString(this.ringtoneUrl);
     }
 
     protected AlarmModel(Parcel in) {
@@ -122,6 +142,8 @@ public class AlarmModel implements Parcelable {
         this.describe = in.readString();
         this.flag = in.readInt();
         this.week = in.readInt();
+        this.ringtoneName = in.readString();
+        this.ringtoneUrl = in.readString();
     }
 
     public static final Creator<AlarmModel> CREATOR = new Creator<AlarmModel>() {

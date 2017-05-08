@@ -5,6 +5,9 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+
+import com.voice.android.reminder.model.AlarmModel;
 
 import java.util.Calendar;
 
@@ -17,9 +20,9 @@ public class AlarmManagerUtil {
 
     public static void setAlarmTime(Context context, long timeInMillis, Intent intent) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent sender = PendingIntent.getBroadcast(context, intent.getIntExtra("id", 0),
+        PendingIntent sender = PendingIntent.getBroadcast(context, intent.getExtras().getInt("id", 0),
                 intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        int interval = (int) intent.getLongExtra("intervalMillis", 0);
+        int interval = (int) intent.getExtras().getLong("intervalMillis", 0);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             am.setWindow(AlarmManager.RTC_WAKEUP, timeInMillis, interval, sender);
         }
@@ -34,19 +37,13 @@ public class AlarmManagerUtil {
         am.cancel(pi);
     }
 
+    public static void setAlarm(Context context, AlarmModel model) {
+        int flag = model.getFlag(); //周期性时间间隔的标志,flag = 0 表示一次性的闹钟, flag = 1 表示每天提醒的闹钟(1天的时间间隔),flag = 2表示按周每周提醒的闹钟（一周的周期性时间间隔）
+        int hour = model.getHour(); //时
+        int minute = model.getMinute();//分
+        int id = model.getId();//闹钟的id
+        int week = model.getWeek();//week=0表示一次性闹钟或者按天的周期性闹钟，非0 的情况下是几就代表以周为周期性的周几的闹钟
 
-    /**
-     * @param flag            周期性时间间隔的标志,flag = 0 表示一次性的闹钟, flag = 1 表示每天提醒的闹钟(1天的时间间隔),flag = 2
-     *                        表示按周每周提醒的闹钟（一周的周期性时间间隔）
-     * @param hour            时
-     * @param minute          分
-     * @param id              闹钟的id
-     * @param week            week=0表示一次性闹钟或者按天的周期性闹钟，非0 的情况下是几就代表以周为周期性的周几的闹钟
-     * @param tips            闹钟提示信息
-     * @param soundOrVibrator 2表示声音和震动都执行，1表示只有铃声提醒，0表示只有震动提醒
-     */
-    public static void setAlarm(Context context, int flag, int hour, int minute, int id, int
-            week, String tips, int soundOrVibrator) {
         AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Calendar calendar = Calendar.getInstance();
         long intervalMillis = 0;
@@ -60,10 +57,11 @@ public class AlarmManagerUtil {
             intervalMillis = 24 * 3600 * 1000 * 7;
         }
         Intent intent = new Intent(ALARM_ACTION);
-        intent.putExtra("intervalMillis", intervalMillis);
-        intent.putExtra("msg", tips);
-        intent.putExtra("id", id);
-        intent.putExtra("soundOrVibrator", soundOrVibrator);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("alarmModel", model);
+        bundle.putLong("intervalMillis", intervalMillis);
+        bundle.putInt("id", model.getId());
+        intent.putExtras(bundle);
         PendingIntent sender = PendingIntent.getBroadcast(context, id, intent, PendingIntent
                 .FLAG_CANCEL_CURRENT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {

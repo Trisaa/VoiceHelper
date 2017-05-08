@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.voice.android.R;
 import com.voice.android.common.base.BaseFragment;
+import com.voice.android.common.utils.AlarmManagerUtil;
 import com.voice.android.common.utils.SharedPreferencesUtils;
 import com.voice.android.common.utils.TimeUtils;
 import com.voice.android.reminder.model.AlarmModel;
@@ -54,7 +55,18 @@ public class AlarmFragment extends BaseFragment {
                 switchCompat.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
                     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                        alarmModel.setOpen(isChecked);
+                        if (mDatas != null && alarmModel != null) {
+                            if (mDatas.contains(alarmModel)) {
+                                alarmModel.setOpen(isChecked);
+                                mDatas.set(mDatas.indexOf(alarmModel), alarmModel);
+                                SharedPreferencesUtils.saveString(getActivity(), SharedPreferencesUtils.KEY_SETTED_ALARM_LIST, new Gson().toJson(mDatas));
+                            }
+                            if (isChecked) {
+                                AlarmManagerUtil.setAlarm(getActivity(), alarmModel);
+                            } else {
+                                AlarmManagerUtil.cancelAlarm(getActivity(), AlarmManagerUtil.ALARM_ACTION, alarmModel.getId());
+                            }
+                        }
                     }
                 });
             }
@@ -72,7 +84,6 @@ public class AlarmFragment extends BaseFragment {
 
     @Subscribe
     public void onEvent(String event) {
-        Log.i("Lebron", " event " + event);
         if (AddAlarmActivity.KEY_ADD_ALARM.equals(event)) {
             initData();
             mAdapter.notifyDataSetChanged();
