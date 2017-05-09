@@ -39,7 +39,8 @@
 
         <activity
             android:name=".quicknote.AddNoteActivity"
-            android:label="新建笔记" />
+            android:label="新建笔记"
+            android:windowSoftInputMode="adjustResize"/>
 
         <receiver android:name=".common.utils.AlarmReceiver">
             <intent-filter>

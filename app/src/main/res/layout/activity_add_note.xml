@@ -28,19 +28,19 @@
 
     <android.support.percent.PercentRelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/toolbar">
 
         <EditText
             android:id="@+id/add_note_edittext"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/toolbar"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/add_note_top_divider"
             android:background="@null"
-            android:gravity="top"
-            app:layout_heightPercent="50%" />
+            android:gravity="top" />
 
         <View
+            android:id="@+id/add_note_top_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_above="@+id/add_note_input_type_layout"
@@ -50,7 +50,7 @@
             android:id="@id/add_note_input_type_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/add_note_edittext"
+            android:layout_above="@+id/add_note_bottom_voice_container"
             android:orientation="horizontal">
 
             <RelativeLayout
@@ -92,19 +92,27 @@
             android:background="#e8e8e8" />
 
         <RelativeLayout
+            android:id="@+id/add_note_bottom_voice_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/add_note_bottom_divider">
+            android:visibility="visible">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/add_note_voice_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@mipmap/ic_voice"
-                android:visibility="gone"
-                app:fabSize="normal" />
+            <RelativeLayout
+                android:id="@+id/add_note_bottom_voice_layout"
+                android:layout_width="match_parent"
+                android:layout_height="260dp"
+                android:visibility="gone">
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/add_note_voice_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/ic_voice"
+                    android:visibility="visible"
+                    app:fabSize="normal" />
+            </RelativeLayout>
         </RelativeLayout>
 
     </android.support.percent.PercentRelativeLayout>
