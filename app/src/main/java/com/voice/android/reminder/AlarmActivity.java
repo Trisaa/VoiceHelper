@@ -11,9 +11,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.voice.android.R;
 import com.voice.android.common.utils.AudioPlayer;
+import com.voice.android.common.utils.SharedPreferencesUtils;
 import com.voice.android.reminder.model.AlarmModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lebron on 17-5-8.
@@ -30,9 +36,21 @@ public class AlarmActivity extends Activity {
         if (alarmModel != null && alarmModel.isOpen()) {
             Log.i("Lebron", " AlarmActivity onCreate");
             showDialog();
+            recordAlarm();
         } else {
             finish();
         }
+    }
+
+    private void recordAlarm() {
+        String string = SharedPreferencesUtils.getString(this, SharedPreferencesUtils.KEY_FINISHED_ALARM_LIST, "");
+        List<AlarmModel> list = new Gson().fromJson(string, new TypeToken<List<AlarmModel>>() {
+        }.getType());
+        if (list == null) {
+            list = new ArrayList<>();
+        }
+        list.add(alarmModel);
+        SharedPreferencesUtils.saveString(this, SharedPreferencesUtils.KEY_FINISHED_ALARM_LIST, new Gson().toJson(list));
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.voice.android.translate;
 
+import android.Manifest;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,9 +21,11 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.voice.android.R;
 import com.voice.android.common.base.BaseFragment;
 import com.voice.android.common.http.HttpMethods;
+import com.voice.android.quicknote.AddNoteActivity;
 import com.voice.android.quicknote.Voice;
 import com.voice.android.translate.adapter.TranslateAdapter;
 import com.voice.android.translate.adapter.TranslateItem;
@@ -35,6 +38,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.OnClick;
 import rx.Subscriber;
+import rx.functions.Action1;
 
 import static com.voice.android.MainActivity.EVENT_CLEAR_TRANSLATE_DATA;
 
@@ -79,7 +83,16 @@ public class TranslateFragment extends BaseFragment {
 
     @OnClick(R.id.translate_cn_layout)
     public void clickCN() {
-        initRecognition(getActivity(), TranslateItem.ITEM_LEFT);
+        new RxPermissions(getActivity()).request(Manifest.permission.RECORD_AUDIO).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean grant) {
+                if (grant) {
+                    initRecognition(getActivity(), TranslateItem.ITEM_LEFT);
+                } else {
+                    Toast.makeText(getActivity(), "未获取所需权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Subscribe
@@ -109,7 +122,16 @@ public class TranslateFragment extends BaseFragment {
 
     @OnClick(R.id.translate_uk_layout)
     public void clickUK() {
-        initRecognition(getActivity(), TranslateItem.ITEM_RIGHT);
+        new RxPermissions(getActivity()).request(Manifest.permission.RECORD_AUDIO).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean grant) {
+                if (grant) {
+                    initRecognition(getActivity(), TranslateItem.ITEM_RIGHT);
+                } else {
+                    Toast.makeText(getActivity(), "未获取所需权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void initSpeech(String text) {

@@ -1,19 +1,20 @@
 package com.voice.android.quicknote;
 
+import android.Manifest;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.tbruyelle.rxpermissions.RxPermissions;
 import com.voice.android.R;
 import com.voice.android.common.base.BaseFragment;
 import com.voice.android.common.utils.SharedPreferencesUtils;
-import com.voice.android.reminder.model.AlarmModel;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -22,6 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import rx.functions.Action1;
 
 import static com.voice.android.quicknote.AddNoteActivity.KEY_ADD_NOTE;
 
@@ -73,7 +75,16 @@ public class NoteFragment extends BaseFragment {
 
     @OnClick(R.id.note_floating_btn)
     public void addNote() {
-        AddNoteActivity.start(getActivity());
+        new RxPermissions(getActivity()).request(Manifest.permission.RECORD_AUDIO).subscribe(new Action1<Boolean>() {
+            @Override
+            public void call(Boolean grant) {
+                if (grant) {
+                    AddNoteActivity.start(getActivity());
+                } else {
+                    Toast.makeText(getActivity(), "未获取所需权限", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void initData() {

@@ -17,6 +17,7 @@ import com.tbruyelle.rxpermissions.RxPermissions;
 import com.voice.android.common.base.BaseActivity;
 import com.voice.android.quicknote.AddNoteActivity;
 import com.voice.android.quicknote.NoteFragment;
+import com.voice.android.reminder.HistoryActivity;
 import com.voice.android.reminder.ReminderFragment;
 import com.voice.android.translate.TranslateFragment;
 
@@ -41,6 +42,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        checkPermission();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
         mToolbar.setTitle("提醒");
         mMainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
@@ -52,7 +54,7 @@ public class MainActivity extends BaseActivity {
                 switch (item.getItemId()) {
                     case R.id.main_bottom_nav_home:
                         mViewPager.setCurrentItem(0);
-                        mMenu.getItem(0).setVisible(false);
+                        mMenu.getItem(0).setVisible(true);
                         mMenu.getItem(1).setVisible(false);
                         mMenu.getItem(2).setVisible(false);
                         mToolbar.setTitle("提醒");
@@ -92,9 +94,18 @@ public class MainActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_history) {
-
+            HistoryActivity.start(this);
         } else if (item.getItemId() == R.id.action_add) {
-            AddNoteActivity.start(this);
+            new RxPermissions(MainActivity.this).request(Manifest.permission.RECORD_AUDIO).subscribe(new Action1<Boolean>() {
+                @Override
+                public void call(Boolean grant) {
+                    if (grant) {
+                        AddNoteActivity.start(MainActivity.this);
+                    } else {
+                        Toast.makeText(MainActivity.this, "未获取所需权限", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         } else if (item.getItemId() == R.id.action_clear) {
             EventBus.getDefault().post(EVENT_CLEAR_TRANSLATE_DATA);
         }
@@ -151,7 +162,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void checkPermission() {
-        new RxPermissions(this).request(Manifest.permission.RECORD_AUDIO).subscribe(new Action1<Boolean>() {
+        new RxPermissions(this).request(Manifest.permission.WRITE_EXTERNAL_STORAGE).subscribe(new Action1<Boolean>() {
             @Override
             public void call(Boolean grant) {
                 if (grant) {

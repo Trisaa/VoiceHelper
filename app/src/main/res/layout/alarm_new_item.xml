@@ -40,6 +40,16 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="16dp" />
 
+    <TextView
+        android:id="@+id/alarm_item_finished_txv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="16dp"
+        android:text="已完成"
+        android:visibility="gone" />
+
     <include
         layout="@layout/common_divider"
         android:layout_width="match_parent"
