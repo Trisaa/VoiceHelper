@@ -51,6 +51,10 @@
             android:name=".reminder.HistoryActivity"
             android:label="已完成" />
 
+        <activity
+            android:name=".VoiceControlActivity"
+            android:label="语音控制" />
+
         <receiver android:name=".common.utils.AlarmReceiver">
             <intent-filter>
                 <action android:name="com.loonggg.alarm.clock" />

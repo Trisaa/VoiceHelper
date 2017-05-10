@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar" />
+
+    <TextView
+        android:id="@+id/voice_tips1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/toolbar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="你可以这样说"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/voice_tips2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voice_tips1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="打开微信/QQ/新浪微博。。。" />
+
+    <TextView
+        android:id="@+id/voice_tips3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voice_tips2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="我想看《人民的名义》" />
+
+    <TextView
+        android:id="@+id/voice_tips4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voice_tips3"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="大连今天的天气" />
+
+    <TextView
+        android:id="@+id/voice_tips5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/voice_tips4"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="好看的电影" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/voice_control_floating_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:src="@mipmap/ic_voice"
+        app:fabSize="normal" />
+</RelativeLayout>

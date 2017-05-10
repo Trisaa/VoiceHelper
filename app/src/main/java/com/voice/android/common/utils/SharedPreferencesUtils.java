@@ -8,6 +8,9 @@ public class SharedPreferencesUtils {
     public static final String KEY_SETTED_ALARM_LIST = "KEY_SETTED_ALARM_LIST";
     public static final String KEY_FINISHED_ALARM_LIST = "KEY_FINISHED_ALARM_LIST";
     public static final String KEY_SETTED_NOTE_LIST = "KEY_SETTED_NOTE_LIST";
+    public static final String KEY_RAIN_NOTIFY = "KEY_RAIN_NOTIFY";
+    public static final String KEY_COOL_NOTIFY = "KEY_COOL_NOTIFY";
+    public static final String KEY_WIFI_NOTIFY = "KEY_WIFI_NOTIFY";
 
     public static SharedPreferences getSharedPreferenced(Context context) {
         return context.getSharedPreferences("settings", Context.MODE_PRIVATE);

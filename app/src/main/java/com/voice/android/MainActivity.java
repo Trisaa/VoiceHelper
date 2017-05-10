@@ -31,6 +31,7 @@ import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity {
     public static final String EVENT_CLEAR_TRANSLATE_DATA = "EVENT_CLEAR_TRANSLATE_DATA";
+    private static final String[] TOOLBAR_TITLES = new String[]{"提醒", "速记", "翻译"};
     @BindView(R.id.main_content_bottombar)
     BottomNavigationView mBottomBar;
     @BindView(R.id.main_content_viewpager)
@@ -38,45 +39,81 @@ public class MainActivity extends BaseActivity {
 
     private MainPagerAdapter mMainPagerAdapter;
     private Menu mMenu;
+    private MenuItem prevMenuItem;
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.main_bottom_nav_home:
+                    mViewPager.setCurrentItem(0);
+                    mMenu.getItem(1).setVisible(true);
+                    mMenu.getItem(2).setVisible(false);
+                    mMenu.getItem(3).setVisible(false);
+                    mToolbar.setTitle(TOOLBAR_TITLES[0]);
+                    break;
+                case R.id.main_bottom_nav_subscribe:
+                    mViewPager.setCurrentItem(1);
+                    mMenu.getItem(2).setVisible(true);
+                    mMenu.getItem(1).setVisible(false);
+                    mMenu.getItem(3).setVisible(false);
+                    mToolbar.setTitle(TOOLBAR_TITLES[1]);
+                    break;
+                case R.id.main_bottom_nav_account:
+                    mViewPager.setCurrentItem(2);
+                    mMenu.getItem(3).setVisible(true);
+                    mMenu.getItem(1).setVisible(false);
+                    mMenu.getItem(2).setVisible(false);
+                    mToolbar.setTitle(TOOLBAR_TITLES[2]);
+                    break;
+            }
+            return true;
+        }
+    };
+
+    private ViewPager.OnPageChangeListener mChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mToolbar.setTitle(TOOLBAR_TITLES[position]);
+            for (int i = 0; i < TOOLBAR_TITLES.length; i++) {
+                if (i == position) {
+                    mMenu.getItem(i + 1).setVisible(true);
+                } else {
+                    mMenu.getItem(i + 1).setVisible(false);
+                }
+            }
+            if (prevMenuItem != null) {
+                prevMenuItem.setChecked(false);
+            } else {
+                mBottomBar.getMenu().getItem(0).setChecked(false);
+            }
+            mBottomBar.getMenu().getItem(position).setChecked(true);
+            prevMenuItem = mBottomBar.getMenu().getItem(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         checkPermission();
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        mToolbar.setTitle("提醒");
+        getSupportActionBar().setTitle(TOOLBAR_TITLES[0]);
+
         mMainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(mMainPagerAdapter);
         mViewPager.setOffscreenPageLimit(2);
-        mBottomBar.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.main_bottom_nav_home:
-                        mViewPager.setCurrentItem(0);
-                        mMenu.getItem(0).setVisible(true);
-                        mMenu.getItem(1).setVisible(false);
-                        mMenu.getItem(2).setVisible(false);
-                        mToolbar.setTitle("提醒");
-                        break;
-                    case R.id.main_bottom_nav_subscribe:
-                        mViewPager.setCurrentItem(1);
-                        mMenu.getItem(1).setVisible(true);
-                        mMenu.getItem(0).setVisible(false);
-                        mMenu.getItem(2).setVisible(false);
-                        mToolbar.setTitle("速记");
-                        break;
-                    case R.id.main_bottom_nav_account:
-                        mViewPager.setCurrentItem(2);
-                        mMenu.getItem(2).setVisible(true);
-                        mMenu.getItem(0).setVisible(false);
-                        mMenu.getItem(1).setVisible(false);
-                        mToolbar.setTitle("翻译");
-                        break;
-                }
-                return true;
-            }
-        });
+        mViewPager.addOnPageChangeListener(mChangeListener);
+        mBottomBar.setOnNavigationItemSelectedListener(mListener);
     }
 
     @Override
@@ -108,6 +145,8 @@ public class MainActivity extends BaseActivity {
             });
         } else if (item.getItemId() == R.id.action_clear) {
             EventBus.getDefault().post(EVENT_CLEAR_TRANSLATE_DATA);
+        }else if(item.getItemId() == R.id.action_voice){
+            VoiceControlActivity.start(this);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -152,7 +191,7 @@ public class MainActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return 3;
+            return TOOLBAR_TITLES.length;
         }
 
         public Fragment getFragment(int key) {
