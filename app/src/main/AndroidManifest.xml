@@ -40,6 +40,11 @@
         <activity
             android:name=".quicknote.AddNoteActivity"
             android:label="新建笔记"
+            android:windowSoftInputMode="adjustResize" />
+
+        <activity
+            android:name=".translate.TransLateMoreActivity"
+            android:label="编辑"
             android:windowSoftInputMode="adjustResize"/>
 
         <receiver android:name=".common.utils.AlarmReceiver">

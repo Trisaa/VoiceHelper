@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CompoundButton;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -79,6 +80,7 @@ public class AlarmFragment extends BaseFragment {
         });
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mAdapter.setEmptyView(getActivity().getLayoutInflater().inflate(R.layout.common_empty_layout, (ViewGroup) mRecyclerView.getParent(), false));
         mRecyclerView.setAdapter(mAdapter);
     }
 

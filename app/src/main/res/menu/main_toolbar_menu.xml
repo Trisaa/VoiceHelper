@@ -13,9 +13,9 @@
         app:showAsAction="ifRoom"
         android:visible="false"/>
     <item
-        android:id="@+id/action_ok"
-        android:icon="@mipmap/ic_ok"
-        android:title="Add"
+        android:id="@+id/action_clear"
+        android:icon="@mipmap/clear_ic"
+        android:title="Clear"
         app:showAsAction="ifRoom"
         android:visible="false"/>
 

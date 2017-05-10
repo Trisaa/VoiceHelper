@@ -20,6 +20,8 @@ import com.voice.android.quicknote.NoteFragment;
 import com.voice.android.reminder.ReminderFragment;
 import com.voice.android.translate.TranslateFragment;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,6 +29,7 @@ import butterknife.BindView;
 import rx.functions.Action1;
 
 public class MainActivity extends BaseActivity {
+    public static final String EVENT_CLEAR_TRANSLATE_DATA = "EVENT_CLEAR_TRANSLATE_DATA";
     @BindView(R.id.main_content_bottombar)
     BottomNavigationView mBottomBar;
     @BindView(R.id.main_content_viewpager)
@@ -92,6 +95,8 @@ public class MainActivity extends BaseActivity {
 
         } else if (item.getItemId() == R.id.action_add) {
             AddNoteActivity.start(this);
+        } else if (item.getItemId() == R.id.action_clear) {
+            EventBus.getDefault().post(EVENT_CLEAR_TRANSLATE_DATA);
         }
         return super.onOptionsItemSelected(item);
     }
