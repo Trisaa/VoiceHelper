@@ -64,6 +64,7 @@
         android:foreground="?android:attr/selectableItemBackground">
 
         <TextView
+            android:id="@+id/add_alarm_label_title_txv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="16dp"
@@ -75,8 +76,13 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
+            android:layout_toRightOf="@id/add_alarm_label_title_txv"
             android:drawableRight="@mipmap/go_ic"
+            android:ellipsize="end"
+            android:gravity="right"
+            android:maxLines="1"
             android:text="闹钟" />
     </RelativeLayout>
 

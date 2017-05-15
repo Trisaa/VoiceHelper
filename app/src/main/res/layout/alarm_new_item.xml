@@ -16,6 +16,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
+        android:layout_toLeftOf="@+id/alarm_item_switchcompat"
         android:layout_toRightOf="@id/alarm_item_icon"
         android:orientation="vertical">
 
@@ -29,6 +30,8 @@
             android:id="@+id/alarm_item_date_txv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="2017-05-01" />
     </LinearLayout>
 
@@ -38,6 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="16dp" />
 
     <TextView
